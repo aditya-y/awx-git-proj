@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: print meaasge
+      debug:
+        msg: Hello Ansible worls
