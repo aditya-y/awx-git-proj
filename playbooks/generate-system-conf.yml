@@ -1,0 +1,48 @@
+---
+- name: Generate Linux system configuration report in HTML
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    output_dir: "/tmp/system_report"
+    output_file: "system_config.html"
+
+  tasks:
+    - name: Create output directory
+      file:
+        path: "{{ output_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Collect /etc/os-release
+      slurp:
+        src: /etc/os-release
+      register: os_release
+
+    - name: Collect CPU info
+      command: cat /proc/cpuinfo
+      register: cpu_info
+
+    - name: Collect Memory info
+      command: cat /proc/meminfo
+      register: mem_info
+
+    - name: Collect Disk info
+      command: lsblk
+      register: disk_info
+
+    - name: Collect Network info
+      command: ip a
+      register: net_info
+
+    - name: Create HTML report
+      template:
+        src: report.html.j2
+        dest: "{{ output_dir }}/{{ output_file }}"
+      vars:
+        os_release: "{{ os_release.content | b64decode }}"
+        cpu_info: "{{ cpu_info.stdout }}"
+        mem_info: "{{ mem_info.stdout }}"
+        disk_info: "{{ disk_info.stdout }}"
+        net_info: "{{ net_info.stdout }}"
