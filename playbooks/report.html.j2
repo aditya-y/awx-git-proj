@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>System Configuration Report</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h2 { color: #2c3e50; border-bottom: 1px solid #ccc; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>System Configuration Report - {{ ansible_hostname }}</h1>
+
+  <h2>Operating System</h2>
+  <pre>{{ os_release }}</pre>
+
+  <h2>CPU Info</h2>
+  <pre>{{ cpu_info }}</pre>
+
+  <h2>Memory Info</h2>
+  <pre>{{ mem_info }}</pre>
+
+  <h2>Disk Info</h2>
+  <pre>{{ disk_info }}</pre>
+
+  <h2>Network Info</h2>
+  <pre>{{ net_info }}</pre>
+</body>
+</html>
