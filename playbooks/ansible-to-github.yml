@@ -1,0 +1,64 @@
+---
+- name: Copy log.sh from server and push to GitHub
+  hosts: managed_server_group
+  become: true
+  vars:
+    github_username: "aditya-y"
+    github_token: "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"
+    remote_file_path: /tmp/log.sh
+    local_tmp_dir: /tmp/
+    repo_url: "https://{{ github_username }}:{{ github_token }}@github.com/{{ github_username }}/awx-git-proj.git"
+    repo_dir: "{{ local_tmp_dir }}/awx-git-proj"
+
+  tasks:
+    - name: Ensure local temp directory exists
+      delegate_to: localhost
+      file:
+        path: "{{ local_tmp_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Fetch the file from remote server
+      fetch:
+        src: "{{ remote_file_path }}"
+        dest: "{{ local_tmp_dir }}/log.sh"
+        flat: yes
+
+    - name: Remove old repo if exists
+      delegate_to: localhost
+      file:
+        path: "{{ repo_dir }}"
+        state: absent
+
+    - name: Clone GitHub repo
+      delegate_to: localhost
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dir }}"
+        clone: yes
+
+    - name: Copy log.sh into GitHub repo
+      delegate_to: localhost
+      copy:
+        src: "{{ local_tmp_dir }}/log.sh"
+        dest: "{{ repo_dir }}/log.sh"
+
+    - name: Git add
+      delegate_to: localhost
+      command: git add log.sh
+      args:
+        chdir: "{{ repo_dir }}"
+
+    - name: Git commit
+      delegate_to: localhost
+      command: git commit -m "Add log.sh from managed server"
+      args:
+        chdir: "{{ repo_dir }}"
+      register: commit_result
+      failed_when: commit_result.rc != 0 and '"nothing to commit"' not in commit_result.stderr
+
+    - name: Git push
+      delegate_to: localhost
+      command: git push origin HEAD
+      args:
+        chdir: "{{ repo_dir }}"
