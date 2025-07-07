@@ -1,0 +1,37 @@
+---
+- name: Copy file from remote server and push to GitHub
+  hosts: localhost
+  gather_facts: false
+  vars:
+    source_server: 18.141.11.104
+    source_path: /tmp/
+    dest_path: /tmp/
+    repo_path: /
+
+  tasks:
+    - name: Copy file from remote server to EE
+      ansible.builtin.fetch:
+        src: "{{ source_path }}"
+        dest: "{{ dest_path }}"
+        flat: yes
+      delegate_to: "{{ source_server }}"
+
+        #    - name: Ensure Git repository exists
+        # ansible.builtin.git:
+        # repo: "https://github.com/yourusername/yourrepo.git"
+        #        dest: "{{ repo_path }}"
+        #        version: main
+
+        #    - name: Copy file to Git repository
+        #      ansible.builtin.copy:
+        #        src: "{{ dest_path }}"
+        #dest: "{{ repo_path }}/{{ item }}"
+        # loop:
+        # - "filename.ext"  # specify your filename here
+
+        # - name: Commit file to Git
+        # ansible.builtin.command:
+        # cmd: |
+        #  git -C {{ repo_path }} add .
+        #  git -C {{ repo_path }} commit -m "Added file from remote server"
+        #  git -C {{ repo_path }} push origin main
