@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     source_server: 18.141.11.104
-    source_path: /tmp/
+    source_path: /tmp/aditya.txt
     dest_path: /tmp/
     repo_path: /
 
