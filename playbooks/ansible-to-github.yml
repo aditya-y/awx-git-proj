@@ -6,7 +6,7 @@
     github_username: "aditya-y"
     github_token: "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"
     remote_file_path: /tmp/log.sh
-    local_tmp_dir: /tmp/
+    local_tmp_dir: /var/lib/awx/repo
     repo_url: "https://{{ github_username }}:{{ github_token }}@github.com/{{ github_username }}/awx-git-proj.git"
     repo_dir: "{{ local_tmp_dir }}/awx-git-proj"
 
