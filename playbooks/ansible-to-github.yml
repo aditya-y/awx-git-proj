@@ -1,6 +1,6 @@
 ---
 - name: Copy log.sh from server and push to GitHub
-  hosts: managed_server_group
+  hosts: all
   become: true
   vars:
     github_username: "aditya-y"
