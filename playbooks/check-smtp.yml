@@ -9,6 +9,9 @@
       register: result
       ignore_errors: true
 
+    - name: Check Uname
+      ansible.builtin.command: uname -a
+
     - name: Show result
       debug:
         var: result.stdout
