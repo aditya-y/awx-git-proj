@@ -1,0 +1,14 @@
+# test_smtplib_ee.yml
+- name: Check smtplib in EE
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Try importing smtplib
+      ansible.builtin.command: python3 -c "import smtplib; print('smtplib available')"
+      register: result
+      ignore_errors: true
+
+    - name: Show result
+      debug:
+        var: result.stdout
