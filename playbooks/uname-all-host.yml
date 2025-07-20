@@ -1,0 +1,35 @@
+---
+- name: Run uname -a on Controller
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Run uname -a on Controller
+      ansible.builtin.command: uname -a
+      delegate_to: localhost
+      run_once: true
+      register: controller_uname
+
+    - debug:
+        var: controller_uname.stdout
+
+- name: Run uname -a on Execution Environment
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Run uname -a inside EE container
+      ansible.builtin.command: uname -a
+      register: ee_uname
+
+    - debug:
+        var: ee_uname.stdout
+
+- name: Run uname -a on Remote Host
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Run uname -a on remote host
+      ansible.builtin.command: uname -a
+      register: remote_uname
+
+    - debug:
+        var: remote_uname.stdout
