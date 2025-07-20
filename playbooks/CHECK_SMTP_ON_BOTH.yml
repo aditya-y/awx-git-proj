@@ -1,0 +1,52 @@
+- name: Check smtplib in both controller and EE
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: 🔍 Check Python version inside EE
+      ansible.builtin.command: python3 --version
+      register: ee_python_version
+
+    - name: 🔍 Show Python version in EE
+      debug:
+        var: ee_python_version.stdout
+
+    - name: ✅ Check smtplib import inside EE
+      ansible.builtin.command: python3 -c "import smtplib; print('smtplib is available in EE')"
+      register: ee_smtplib_result
+      ignore_errors: true
+
+    - name: 📤 Show smtplib result from EE
+      debug:
+        var: ee_smtplib_result.stdout
+
+    - name: ❌ Show smtplib error in EE (if any)
+      debug:
+        var: ee_smtplib_result.stderr
+      when: ee_smtplib_result.rc != 0
+
+    - name: 🧩 Check Python version on controller
+      ansible.builtin.command: python3 --version
+      delegate_to: localhost
+      register: controller_python_version
+
+    - name: 🧩 Show Python version on controller
+      debug:
+        var: controller_python_version.stdout
+
+    - name: 🧪 Check smtplib import on controller
+      ansible.builtin.command: python3 -c "import smtplib; print('smtplib is available on controller')"
+      delegate_to: localhost
+      register: controller_smtplib_result
+      ignore_errors: true
+
+    - name: 📤 Show smtplib result from controller
+      debug:
+        var: controller_smtplib_result.stdout
+
+    - name: ❌ Show smtplib error on controller (if any)
+      debug:
+        var: controller_smtplib_result.stderr
+      when: controller_smtplib_result.rc != 0
